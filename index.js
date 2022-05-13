@@ -100,6 +100,8 @@ const constructLayerToDna = (_dna = [], _layers = [], _rarity) => {
       selectedElement: {...selectedElement, rarity: _rarity },
     };
   });
+  //console.log("VALOR");
+  //console.log("VALOR = " + JSON.stringify(mappedDnaToLayers,null, 4));
   return mappedDnaToLayers;
 };
 
@@ -110,10 +112,11 @@ const isDnaUnique = (_DnaList = [], _dna = []) => {
   return foundDna == undefined ? true : false;
 };
 
+//This function is used to select the rarity that we need to add, is simply, because this function through into the object
+// and select the first rarity that has the best value.
 const getRandomRarity = (_rarityOptions) => {
   let randomPercent = Math.random() * 100;
   let percentCount = 0;
-
   for (let i = 0; i <= _rarityOptions.length; i++) {
     percentCount += _rarityOptions[i].percent;
     if (percentCount >= randomPercent) {
@@ -126,18 +129,29 @@ const getRandomRarity = (_rarityOptions) => {
 
 // create a dna based on the available layers for the given rarity
 // use a random part for each layer
+// this code make 6 iterations, one for each layer and how it works?
+// Okey, here the program receives the layer and the rarity assigned for each assets
 const createDna = (_layers, _rarity) => {
+  let numero = 0;
   let randNum = [];
   let _rarityWeight = rarityWeights.find(rw => rw.value === _rarity);
   _layers.forEach((layer) => {
+    numero = numero + 1;
     let num = Math.floor(Math.random() * layer.elementIdsForRarity[_rarity].length);
+    //console.log("OBJETO = " + JSON.stringify(layer, null, 4));
     if (_rarityWeight && _rarityWeight.layerPercent[layer.id]) {
       // if there is a layerPercent defined, we want to identify which dna to actually use here (instead of only picking from the same rarity)
       let _rarityForLayer = getRandomRarity(_rarityWeight.layerPercent[layer.id]);
       num = Math.floor(Math.random() * layer.elementIdsForRarity[_rarityForLayer].length);
       randNum.push(layer.elementIdsForRarity[_rarityForLayer][num]);
+      console.log("layer a analizar en el if = " + layer.elementIdsForRarity[_rarity]);
+      console.log("rango del rarity = " + layer.elementIdsForRarity[_rarity].length);
+      console.log("El valor del numero random es = " + num);
     } else {
       randNum.push(layer.elementIdsForRarity[_rarity][num]);
+      console.log("layer a analizar de una = " + layer.elementIdsForRarity[_rarity]);
+      console.log("rango del rarity = " + layer.elementIdsForRarity[_rarity].length);
+      console.log("El valor del numero random es = " + num);
     }
   });
   return randNum;
@@ -148,7 +162,7 @@ let rarityForEdition;
 // get the rarity for the image by edition number that should be generated
 const getRarity = (_editionCount) => {
   if (!rarityForEdition) {
-    // prepare array to iterate over
+    // prepare array to iterate over just add the assets number that we configured on config.js
     rarityForEdition = [];
     rarityWeights.forEach((rarityWeight) => {
       for (let i = rarityWeight.from; i <= rarityWeight.to; i++) {
@@ -184,7 +198,7 @@ const startCreating = async () => {
   rarityWeights.forEach((rarityWeight) => {
     dnaListByRarity[rarityWeight.value] = [];
   });
-
+  console.log(rarityWeights);
   // create NFTs from startEditionFrom to editionSize
   let editionCount = startEditionFrom;
   while (editionCount <= editionSize) {
