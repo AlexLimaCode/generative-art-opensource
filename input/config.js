@@ -118,9 +118,9 @@ const addRarityPercentForLayer = (_rarityId, _layerId, _percentages) => {
  *************************************************************/
 
 // image width in pixels
-const width = 1800;
+const width = 3300;
 // image height in pixels
-const height = 1000;
+const height = 2550;
 // description for NFT in metadata file
 const description = "This is an NFT made by the coolest generative code.";
 // base url to use in metadata file
@@ -137,7 +137,7 @@ const editionDnaPrefix = 0
 // for each weight, call 'addRarity' with the id and from which to which element this rarity should be applied
 // Is very important see the order because with it the program assigns the id for each asset on each layer
 let rarityWeights = [
-  addRarity('original', 40, 50),
+  addRarity('Classic', 40, 50),
   addRarity('super_rare', 10, 40),
   addRarity('rare', 1, 10),
   
@@ -150,12 +150,15 @@ const layers = [
   addLayer('Background', { x: 0, y: 0 }, { width: width, height: height }),
   addLayer('CB'),
   addLayer('QA'),
+  addLayer('Cloud'),
+  addLayer('Solutions'),
 ];
 
 // provide any specific percentages that are required for a given layer and rarity level
 // all provided options are used based on their percentage values to decide which layer to select from
-addRarityPercentForLayer('super_rare', 'CB',  { 'super_rare': 40, 'rare': 30, 'original': 30});
-addRarityPercentForLayer('super_rare', 'QA',  { 'super_rare': 30, 'rare':  40, 'original': 30 });
+addRarityPercentForLayer('super_rare', 'CB',  { 'super_rare': 40, 'rare': 30, 'Classic': 30});
+addRarityPercentForLayer('super_rare', 'QA',  { 'super_rare': 40, 'rare':  30, 'Classic': 30 });
+addRarityPercentForLayer('super_rare', 'Cloud',  { 'super_rare': 40, 'rare':  30, 'Classic': 30 });
 
 module.exports = {
   layers,
